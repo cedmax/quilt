@@ -1,13 +1,9 @@
 import styled from "styled-components";
 
-export const ResetButton = styled.button`
-  float: right;
-`;
-
 export const Panel = styled.aside`
   height: 100vh;
   padding: 0.5em 1.5em;
-  width: 20%;
+  width: 24%;
   min-width: 200px;
   background: WhiteSmoke;
   box-shadow: 3px 0px 10px DimGray;
@@ -96,13 +92,22 @@ export const TilesList = styled.div`
 `;
 
 export const SaveRestoreWrapper = styled.div`
-  position: absolute;
-  bottom: 1em;
-  right: 1em;
-  width: 200px;
   display: flex;
+  padding: 0 1em;
+  justify-content: space-between;
+  flex-wrap: wrap;
 `;
 
-export const SaveRestoreBtn = styled.button`
-  width: 40%;
+export const Button = styled.button`
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 0.5em 1em;
+  width: 30%;
+  min-width: fit-content;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  font-size: 0.7rem;
+  text-align: center;
+  background: white;
 `;

@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useEffect } from "react";
 import createPersistedState from "use-persisted-state";
-import { Panel, Layout, ResetButton } from "./components/styled";
+import { Panel, Layout } from "./components/styled";
+import Actions from "./components/Actions";
 import Size from "./components/Size";
 import AvailableTiles from "./components/AvailableTiles";
 import Body from "./components/Body";
@@ -61,6 +62,18 @@ export default memo(() => {
     setSelected(0);
   }, [setFit, setMatrix, setSelected, setTileList, updateHeight, updateWidth]);
 
+  const onRestore = useCallback(
+    data => {
+      updateWidth(data.width);
+      updateHeight(data.height);
+      setFit(data.isFit);
+      setTileList(data.tileList);
+      setMatrix(data.matrix);
+      setSelected(data.selected);
+    },
+    [setFit, setMatrix, setSelected, setTileList, updateHeight, updateWidth]
+  );
+
   useEffect(() => {
     setMatrix(matrix => calcMatrix(matrix, width, height));
   }, [width, height, setMatrix]);
@@ -72,8 +85,6 @@ export default memo(() => {
     },
     [setSelected, tileList]
   );
-
-  console.log(matrix);
 
   const handleQty = useCallback(
     (r, c, tile, prevBk) => {
@@ -98,7 +109,18 @@ export default memo(() => {
     <Layout>
       <Panel>
         <h2>Config</h2>
-        <ResetButton onClick={onReset}>reset</ResetButton>
+        <Actions
+          stateToSave={{
+            isFit,
+            width,
+            height,
+            tileList,
+            matrix,
+            selected
+          }}
+          onRestore={onRestore}
+          onReset={onReset}
+        />
         <h3>Size</h3>
         <Size
           isFit={isFit}

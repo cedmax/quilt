@@ -3,11 +3,16 @@ import styled from "styled-components";
 import Switch from "./Switch";
 
 const Block = styled.div`
+  padding: 0 1em;
   display: flex;
-  justify-content: space-around;
-  align-items: ${p => (p.left ? "flex-start" : "center")};
+  justify-content: ${p => (p.left ? "flex-start" : "space-between")};
+  align-items: center;
   line-height: 1;
   margin-bottom: 20px;
+`;
+
+const Copy = styled.span`
+  margin-left: 0.5em;
 `;
 
 const Input = styled.input`
@@ -31,7 +36,7 @@ export default memo(({ isFit, setFit, height, width, updateWidth, updateHeight }
         <Input type="number" value={height} onChange={setHeight} />
       </Block>
       <Block left>
-        <Switch checked={isFit} onChange={setFit} /> Fit in screen?
+        <Switch checked={isFit} onChange={setFit} /> <Copy>Fit in screen?</Copy>
       </Block>
     </>
   );
