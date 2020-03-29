@@ -1,4 +1,4 @@
-export default [
+const original = [
   { img: "/tiles/00.jpg", qty: 1 },
   { img: "/tiles/01.jpg", qty: 5 },
   { img: "/tiles/02.jpg", qty: 2 },
@@ -38,3 +38,5 @@ export default [
   { img: "/tiles/37.jpg", qty: 6 },
   { img: "/tiles/38.jpg", qty: 54, retro: "/tiles/13.jpg" }
 ].map(({ img, qty, retro }) => ({ background: `url('${img}')`, qty, retro: retro ? `url('${retro}')` : null }));
+
+export default () => [...original];

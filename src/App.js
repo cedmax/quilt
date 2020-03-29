@@ -5,7 +5,7 @@ import Size from "./components/Size";
 import AvailableTiles from "./components/AvailableTiles";
 import Body from "./components/Body";
 import { ROWS, COLS } from "./constants";
-import availableTiles from "./tiles";
+import getTiles from "./tiles";
 import getLocalState from "./localstorage";
 
 const useTilesAvailableState = createPersistedState("tiles");
@@ -25,21 +25,31 @@ const updateMatrix = (r, c, bk) => matrix => {
   return matrix;
 };
 
+const decrease = item => ({
+  ...item,
+  qty: item.qty - 1
+});
+
+const increase = item => ({
+  ...item,
+  qty: item.qty + 1
+});
+
 export default memo(() => {
   const [isFit, setFit] = useIsFit(() => getLocalState("is-fit", true));
   const [width, updateWidth] = useStateWidth(() => getLocalState("width", COLS));
   const [height, updateHeight] = useStateHeight(() => getLocalState("height", ROWS));
-  const [tileList, setTileList] = useTilesAvailableState(() => getLocalState("tiles", [...availableTiles]));
+  const [tileList, setTileList] = useTilesAvailableState(() => getLocalState("tiles", getTiles()));
   const [matrix, setMatrix] = useMatrixState(() => getLocalState("matrix", calcMatrix(width, height)));
-  const [selected, setSelected] = useSelected(() => getLocalState("selected", {}));
+  const [selected, setSelected] = useSelected(() => getLocalState("selected", 0));
 
   const onReset = useCallback(() => {
     updateWidth(COLS);
     updateHeight(ROWS);
     setFit(true);
-    setTileList([...availableTiles]);
+    setTileList(getTiles());
     setMatrix(calcMatrix(COLS, ROWS));
-    setSelected({});
+    setSelected(0);
   }, [setFit, setMatrix, setSelected, setTileList, updateHeight, updateWidth]);
 
   useEffect(() => {
@@ -48,66 +58,29 @@ export default memo(() => {
 
   const selectTile = useCallback(
     tile => {
-      setSelected(tile);
+      const idx = tileList.findIndex(item => item.background === tile.background);
+      setSelected(idx);
     },
-    [setSelected]
+    [setSelected, tileList]
   );
 
-  const reduceQty = useCallback(
-    (r, c, tile) => {
-      let done = false;
+  const handleQty = useCallback(
+    (r, c, tile, prevBk) => {
       setMatrix(updateMatrix(r, c, tile.background || ""));
-
-      setTileList(state => {
-        if (!done) {
-          const tileList = [...state];
-          const currIdx = tileList.findIndex(({ background }) => tile.background === background);
-
-          if (tileList[currIdx]) {
-            tileList[currIdx].qty = tileList[currIdx].qty - 1;
-
-            const { retro } = tileList[currIdx];
-            if (retro) {
-              const retroIdx = tileList.findIndex(({ background }) => background === retro);
-              console.log(retro, retroIdx);
-              tileList[retroIdx].qty = tileList[retroIdx].qty - 1;
-            }
+      setTileList(state =>
+        state.map(item => {
+          let retItem = item;
+          if (prevBk === item.background || prevBk === item.retro) {
+            retItem = increase(retItem);
           }
-          done = true;
-          return [...tileList];
-        } else {
-          return [...state];
-        }
-      });
+          if (tile.background === item.background || tile.background === item.retro) {
+            retItem = decrease(retItem);
+          }
+          return retItem;
+        })
+      );
     },
     [setTileList, setMatrix]
-  );
-
-  const increaseQty = useCallback(
-    bk => {
-      let done = false;
-      setTileList(state => {
-        if (!done) {
-          const tileList = [...state];
-          const currIdx = tileList.findIndex(({ background }) => bk === background);
-          if (tileList[currIdx]) {
-            tileList[currIdx].qty = tileList[currIdx].qty + 1;
-
-            const { retro } = tileList[currIdx];
-            if (retro) {
-              const retroIdx = tileList.findIndex(({ background }) => background === retro);
-              console.log(retro, retroIdx);
-              tileList[retroIdx].qty = tileList[retroIdx].qty + 1;
-            }
-          }
-          done = true;
-          return [...tileList];
-        } else {
-          return [...state];
-        }
-      });
-    },
-    [setTileList]
   );
 
   return (
@@ -130,9 +103,8 @@ export default memo(() => {
       <Body
         matrix={matrix}
         setMatrix={setMatrix}
-        onUnSelect={increaseQty}
-        selected={selected}
-        onSelect={reduceQty}
+        selected={tileList[selected]}
+        onSelect={handleQty}
         isFit={isFit}
         width={width}
         height={height}

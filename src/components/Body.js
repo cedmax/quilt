@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   overflow: auto;
 `;
 
-export default memo(({ width, height, isFit, selected, onSelect, onUnSelect, matrix, setMatrix }) => {
+export default memo(({ width, height, isFit, selected, onSelect, onUnSelect, matrix }) => {
   const [tileSize, setTileSize] = useState(TILE_SIZE);
   const wrapperRef = useRef();
 
@@ -35,8 +35,8 @@ export default memo(({ width, height, isFit, selected, onSelect, onUnSelect, mat
   }, [isFit, width, height]);
 
   const setBk = useCallback(
-    (r, c, selected) => {
-      onSelect(r, c, selected);
+    (r, c, selected, prevTile) => {
+      onSelect(r, c, selected, prevTile);
     },
     [onSelect]
   );
@@ -46,16 +46,13 @@ export default memo(({ width, height, isFit, selected, onSelect, onUnSelect, mat
       <Grid size={tileSize} height={height} width={width}>
         {({ size, key, r, c }) => {
           const currentTile = matrix[r] && matrix[r][c];
+
           const onClick = () => {
-            if (currentTile) {
-              onUnSelect(currentTile, 1);
+            if (selected.qty && selected.background !== currentTile) {
+              return setBk(r, c, selected, currentTile);
             }
 
-            if (selected && selected.background !== currentTile) {
-              selected.qty && setBk(r, c, selected);
-            } else {
-              setBk(r, c, {});
-            }
+            setBk(r, c, {}, currentTile);
           };
 
           return (

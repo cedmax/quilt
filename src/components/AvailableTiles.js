@@ -6,7 +6,7 @@ export default memo(({ tiles, selectTile, selected }) => {
     <TilesList>
       {tiles.map((tile, i) => (
         <Tile
-          selected={selected.background === tile.background}
+          selected={i === selected}
           onClick={() => selectTile(tile)}
           key={i}
           size={35}
