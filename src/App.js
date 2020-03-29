@@ -15,8 +15,17 @@ const useMatrixState = createPersistedState("matrix");
 const useIsFit = createPersistedState("is-fit");
 const useSelected = createPersistedState("selected");
 
-const calcMatrix = (width, height) => {
-  return [...new Array(height)].map(row => [...new Array(width)].map(i => ""));
+const calcMatrix = (matrix, width, height) => {
+  const stuff = [...new Array(height)].map((row, r) => {
+    if (matrix[r]) {
+      return [...new Array(width)].map((col, c) => {
+        return matrix[r][c] || "";
+      });
+    } else {
+      return [...new Array(width)].map(col => "");
+    }
+  });
+  return stuff;
 };
 
 const updateMatrix = (r, c, bk) => matrix => {
@@ -48,12 +57,12 @@ export default memo(() => {
     updateHeight(ROWS);
     setFit(true);
     setTileList(getTiles());
-    setMatrix(calcMatrix(COLS, ROWS));
+    setMatrix(calcMatrix([], COLS, ROWS));
     setSelected(0);
   }, [setFit, setMatrix, setSelected, setTileList, updateHeight, updateWidth]);
 
   useEffect(() => {
-    setMatrix(() => getLocalState("matrix", calcMatrix(width, height)));
+    setMatrix(matrix => calcMatrix(matrix, width, height));
   }, [width, height, setMatrix]);
 
   const selectTile = useCallback(
@@ -63,6 +72,8 @@ export default memo(() => {
     },
     [setSelected, tileList]
   );
+
+  console.log(matrix);
 
   const handleQty = useCallback(
     (r, c, tile, prevBk) => {

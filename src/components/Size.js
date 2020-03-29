@@ -18,7 +18,7 @@ const Input = styled.input`
   width: 35%;
 `;
 
-const callback = update => value => update(parseInt(value || 0, 10));
+const callback = update => value => update(parseInt(Math.min(value, 100) || 0, 10));
 
 export default memo(({ isFit, setFit, height, width, updateWidth, updateHeight }) => {
   const setWidth = useCallback(e => callback(updateWidth)(e.target.value), [updateWidth]);
@@ -27,8 +27,8 @@ export default memo(({ isFit, setFit, height, width, updateWidth, updateHeight }
   return (
     <>
       <Block>
-        <Input value={width} onChange={setWidth} /> x
-        <Input value={height} onChange={setHeight} />
+        <Input type="number" value={width} onChange={setWidth} /> x
+        <Input type="number" value={height} onChange={setHeight} />
       </Block>
       <Block left>
         <Switch checked={isFit} onChange={setFit} /> Fit in screen?

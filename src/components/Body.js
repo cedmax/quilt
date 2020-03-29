@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   overflow: auto;
 `;
 
-export default memo(({ width, height, isFit, selected, onSelect, onUnSelect, matrix }) => {
+export default memo(({ width, height, isFit, selected, onSelect, matrix }) => {
   const [tileSize, setTileSize] = useState(TILE_SIZE);
   const wrapperRef = useRef();
 

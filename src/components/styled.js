@@ -94,3 +94,15 @@ export const TilesList = styled.div`
     margin-right: 2px;
   }
 `;
+
+export const SaveRestoreWrapper = styled.div`
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+  width: 200px;
+  display: flex;
+`;
+
+export const SaveRestoreBtn = styled.button`
+  width: 40%;
+`;
