@@ -20,13 +20,32 @@ export default memo(() => {
     [setSelected]
   );
 
-  const updateQty = useCallback(tile => {
+  const reduceQty = useCallback(tile => {
     let done = false;
     setTileList(state => {
       if (!done) {
         const tileList = [...state];
         const currIdx = tileList.findIndex(({ background }) => tile.background === background);
-        tileList[currIdx].qty = tileList[currIdx].qty - 1;
+        if (tileList[currIdx]) {
+          tileList[currIdx].qty = tileList[currIdx].qty - 1;
+        }
+        done = true;
+        return [...tileList];
+      } else {
+        return [...state];
+      }
+    });
+  }, []);
+
+  const increaseQty = useCallback(bk => {
+    let done = false;
+    setTileList(state => {
+      if (!done) {
+        const tileList = [...state];
+        const currIdx = tileList.findIndex(({ background }) => bk === background);
+        if (tileList[currIdx]) {
+          tileList[currIdx].qty = tileList[currIdx].qty + 1;
+        }
         done = true;
         return [...tileList];
       } else {
@@ -51,7 +70,14 @@ export default memo(() => {
         <h3>Tiles</h3>
         <AvailableTiles selectTile={selectTile} selected={selected} tiles={tileList} />
       </Panel>
-      <Body selected={selected} onSelect={updateQty} isFit={isFit} width={width} height={height} />
+      <Body
+        onUnSelect={increaseQty}
+        selected={selected}
+        onSelect={reduceQty}
+        isFit={isFit}
+        width={width}
+        height={height}
+      />
     </Layout>
   );
 });

@@ -67,7 +67,7 @@ const counter = styled.style`
 `;
 
 export const Tile = styled.div`
-  cursor: pointer;
+  cursor: ${p => (p.cursorDisabled ? "no-drop" : "pointer")};
   position: relative;
   width: ${p => p.size}px;
   height: ${p => p.size}px;
@@ -75,8 +75,8 @@ export const Tile = styled.div`
   background-size: cover !important;
   ${p => (p.add ? addStyle.componentStyle.rules : "")};
   ${p => (p.selected ? selected.componentStyle.rules : "")};
-  ${p => (p.disabled ? disabled.componentStyle.rules : "")};
   ${p => (p.count ? counter.componentStyle.rules : "")}
+  ${p => (p.disabled ? disabled.componentStyle.rules : "")};
 `;
 
 export const TilesList = styled.div`

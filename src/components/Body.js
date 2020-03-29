@@ -22,7 +22,7 @@ const updateMatrix = (r, c, bk) => matrix => {
   return matrix;
 };
 
-export default memo(({ width, height, isFit, selected, onSelect }) => {
+export default memo(({ width, height, isFit, selected, onSelect, onUnSelect }) => {
   const [tileSize, setTileSize] = useState(TILE_SIZE);
   const wrapperRef = useRef();
   const [matrix, setMatrix] = useState(calcMatrix(width, height));
@@ -51,28 +51,41 @@ export default memo(({ width, height, isFit, selected, onSelect }) => {
 
   const setBk = useCallback(
     (r, c, selected) => {
-      setMatrix(updateMatrix(r, c, selected.background));
+      setMatrix(updateMatrix(r, c, selected.background || ""));
       onSelect(selected);
     },
-    [setMatrix]
+    [setMatrix, onSelect]
   );
 
   return (
     <Wrapper ref={wrapperRef}>
       <Grid size={tileSize} height={height} width={width}>
-        {({ size, key, r, c }) => (
-          <Tile
-            onClick={e => {
-              selected.qty && setBk(r, c, selected);
-            }}
-            style={{
-              background: (matrix[r] && matrix[r][c]) || "#ccc"
-            }}
-            key={key}
-            size={size}
-            color="#ccc"
-          />
-        )}
+        {({ size, key, r, c }) => {
+          const currentTile = matrix[r] && matrix[r][c];
+
+          return (
+            <Tile
+              onClick={() => {
+                if (currentTile) {
+                  onUnSelect(currentTile);
+                }
+
+                if (selected && selected.background !== currentTile) {
+                  selected.qty && setBk(r, c, selected);
+                } else {
+                  setBk(r, c, {});
+                }
+              }}
+              style={{
+                background: currentTile || "#ccc"
+              }}
+              cursorDisabled={selected.qty === 0 || !selected.background}
+              key={key}
+              size={size}
+              color="#ccc"
+            />
+          );
+        }}
       </Grid>
     </Wrapper>
   );
