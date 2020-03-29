@@ -62,20 +62,21 @@ export default memo(({ width, height, isFit, selected, onSelect, onUnSelect }) =
       <Grid size={tileSize} height={height} width={width}>
         {({ size, key, r, c }) => {
           const currentTile = matrix[r] && matrix[r][c];
+          const onClick = () => {
+            if (currentTile) {
+              onUnSelect(currentTile);
+            }
+
+            if (selected && selected.background !== currentTile) {
+              selected.qty && setBk(r, c, selected);
+            } else {
+              setBk(r, c, {});
+            }
+          };
 
           return (
             <Tile
-              onClick={() => {
-                if (currentTile) {
-                  onUnSelect(currentTile);
-                }
-
-                if (selected && selected.background !== currentTile) {
-                  selected.qty && setBk(r, c, selected);
-                } else {
-                  setBk(r, c, {});
-                }
-              }}
+              onClick={onClick}
               style={{
                 background: currentTile || "#ccc"
               }}

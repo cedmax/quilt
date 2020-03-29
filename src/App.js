@@ -26,8 +26,16 @@ export default memo(() => {
       if (!done) {
         const tileList = [...state];
         const currIdx = tileList.findIndex(({ background }) => tile.background === background);
+
         if (tileList[currIdx]) {
           tileList[currIdx].qty = tileList[currIdx].qty - 1;
+
+          const { retro } = tileList[currIdx];
+          if (retro) {
+            const retroIdx = tileList.findIndex(({ background }) => background === retro);
+            console.log(retro, retroIdx);
+            tileList[retroIdx].qty = tileList[retroIdx].qty - 1;
+          }
         }
         done = true;
         return [...tileList];
@@ -45,6 +53,13 @@ export default memo(() => {
         const currIdx = tileList.findIndex(({ background }) => bk === background);
         if (tileList[currIdx]) {
           tileList[currIdx].qty = tileList[currIdx].qty + 1;
+
+          const { retro } = tileList[currIdx];
+          if (retro) {
+            const retroIdx = tileList.findIndex(({ background }) => background === retro);
+            console.log(retro, retroIdx);
+            tileList[retroIdx].qty = tileList[retroIdx].qty + 1;
+          }
         }
         done = true;
         return [...tileList];
