@@ -91,10 +91,10 @@ export const TilesList = styled.div`
   }
 `;
 
-export const SaveRestoreWrapper = styled.div`
+export const ButtonWrapper = styled.div`
   display: flex;
   padding: 0 1em;
-  justify-content: space-between;
+  justify-content: space-evenly;
   flex-wrap: wrap;
 `;
 

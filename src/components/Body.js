@@ -1,13 +1,15 @@
 import React, { memo, useEffect, useRef, useState, useCallback } from "react";
+import html2canvas from "html2canvas";
 import getNodeDimensions from "get-node-dimensions";
 import styled from "styled-components";
 import { TILE_SIZE, WRAPPER_PADDING } from "../constants";
 import Grid from "./Grid";
-import { Tile } from "./styled";
+import { Tile, Button, ButtonWrapper } from "./styled";
 
 const Wrapper = styled.div`
-  padding: ${WRAPPER_PADDING}px 0;
-  height: 100vh;
+  padding: ${WRAPPER_PADDING}px 0 ${WRAPPER_PADDING / 2}px;
+  margin-bottom: ${WRAPPER_PADDING / 2}px;
+  height: calc(100vh - 60px);
   flex-grow: 1;
   overflow: auto;
 `;
@@ -34,41 +36,54 @@ export default memo(({ width, height, isFit, selected, onSelect, matrix }) => {
     return () => window.removeEventListener("resize", resize);
   }, [isFit, width, height]);
 
-  const setBk = useCallback(
-    (r, c, selected, prevTile) => {
-      onSelect(r, c, selected, prevTile);
-    },
-    [onSelect]
-  );
+  const save = useCallback(() => {
+    html2canvas(wrapperRef.current).then(canvas => {
+      canvas.id = "remove";
+      document.body.appendChild(canvas);
+      const link = document.createElement("a");
+      link.download = "quilt.jpg";
+      link.href = canvas.toDataURL("image/jpeg");
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      document.getElementById("remove").remove();
+    });
+  }, [wrapperRef]);
 
   return (
-    <Wrapper ref={wrapperRef}>
-      <Grid size={tileSize} height={height} width={width}>
-        {({ size, key, r, c }) => {
-          const currentTile = matrix[r] && matrix[r][c];
+    <div>
+      <Wrapper ref={wrapperRef}>
+        <Grid size={tileSize} height={height} width={width}>
+          {({ size, key, r, c }) => {
+            const currentTile = matrix[r] && matrix[r][c];
 
-          const onClick = () => {
-            if (selected.qty && selected.background !== currentTile) {
-              return setBk(r, c, selected, currentTile);
-            }
+            const onClick = () => {
+              if (selected.qty && selected.background !== currentTile) {
+                return onSelect(r, c, selected, currentTile);
+              }
 
-            setBk(r, c, {}, currentTile);
-          };
+              onSelect(r, c, {}, currentTile);
+            };
 
-          return (
-            <Tile
-              onClick={onClick}
-              style={{
-                background: currentTile || "#ccc"
-              }}
-              cursorDisabled={selected.qty === 0 || !selected.background}
-              key={key}
-              size={size}
-              color="#ccc"
-            />
-          );
-        }}
-      </Grid>
-    </Wrapper>
+            return (
+              <Tile
+                onClick={onClick}
+                style={{
+                  background: currentTile || "#ccc"
+                }}
+                cursorDisabled={selected.qty === 0 || !selected.background}
+                key={key}
+                size={size}
+                color="#ccc"
+              />
+            );
+          }}
+        </Grid>
+      </Wrapper>
+      <ButtonWrapper>
+        <Button onClick={save}>Download Image</Button>
+      </ButtonWrapper>
+    </div>
   );
 });

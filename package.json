@@ -5,6 +5,7 @@
   "dependencies": {
     "cra-template": "1.0.3",
     "get-node-dimensions": "^1.2.1",
+    "html2canvas": "^1.0.0-rc.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",

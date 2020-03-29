@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react";
-import { SaveRestoreWrapper, Button } from "./styled";
+import { ButtonWrapper, Button } from "./styled";
 
 export default memo(({ onReset, onRestore, stateToSave }) => {
   const href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(stateToSave));
@@ -20,15 +20,15 @@ export default memo(({ onReset, onRestore, stateToSave }) => {
   );
 
   return (
-    <SaveRestoreWrapper>
+    <ButtonWrapper>
       <Button onClick={onReset}>Reset</Button>
       <Button as="label" htmlFor="file">
         Restore
       </Button>
       <input value="" onChange={onChange} type="file" id="file" style={{ display: "none" }} />{" "}
       <Button as="a" download="quilt.json" href={href}>
-        Save
+        Backup
       </Button>
-    </SaveRestoreWrapper>
+    </ButtonWrapper>
   );
 });
