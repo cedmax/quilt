@@ -8,6 +8,7 @@ export const Panel = styled.aside`
   background: WhiteSmoke;
   box-shadow: 3px 0px 10px DimGray;
   border-right: 1px solid Gray;
+  overflow: auto;
 `;
 
 export const Layout = styled.div`

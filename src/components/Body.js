@@ -12,24 +12,9 @@ const Wrapper = styled.div`
   overflow: auto;
 `;
 
-const calcMatrix = (width, height) => {
-  return [...new Array(height)].map(row => [...new Array(width)].map(i => ""));
-};
-
-const updateMatrix = (r, c, bk) => matrix => {
-  matrix = [...matrix];
-  matrix[r][c] = bk;
-  return matrix;
-};
-
-export default memo(({ width, height, isFit, selected, onSelect, onUnSelect }) => {
+export default memo(({ width, height, isFit, selected, onSelect, onUnSelect, matrix, setMatrix }) => {
   const [tileSize, setTileSize] = useState(TILE_SIZE);
   const wrapperRef = useRef();
-  const [matrix, setMatrix] = useState(calcMatrix(width, height));
-
-  useEffect(() => {
-    setMatrix(() => calcMatrix(width, height));
-  }, [width, height]);
 
   useEffect(() => {
     const resize = () => {
@@ -51,10 +36,9 @@ export default memo(({ width, height, isFit, selected, onSelect, onUnSelect }) =
 
   const setBk = useCallback(
     (r, c, selected) => {
-      setMatrix(updateMatrix(r, c, selected.background || ""));
-      onSelect(selected);
+      onSelect(r, c, selected);
     },
-    [setMatrix, onSelect]
+    [onSelect]
   );
 
   return (
