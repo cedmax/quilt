@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const ResetButton = styled.button`
+  float: right;
+`;
+
 export const Panel = styled.aside`
   height: 100vh;
   padding: 0.5em 1.5em;

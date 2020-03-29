@@ -1,6 +1,6 @@
-import React, { useState, memo, useCallback, useEffect } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import createPersistedState from "use-persisted-state";
-import { Panel, Layout } from "./components/styled";
+import { Panel, Layout, ResetButton } from "./components/styled";
 import Size from "./components/Size";
 import AvailableTiles from "./components/AvailableTiles";
 import Body from "./components/Body";
@@ -12,6 +12,8 @@ const useTilesAvailableState = createPersistedState("tiles");
 const useStateWidth = createPersistedState("width");
 const useStateHeight = createPersistedState("height");
 const useMatrixState = createPersistedState("matrix");
+const useIsFit = createPersistedState("is-fit");
+const useSelected = createPersistedState("selected");
 
 const calcMatrix = (width, height) => {
   return [...new Array(height)].map(row => [...new Array(width)].map(i => ""));
@@ -24,12 +26,21 @@ const updateMatrix = (r, c, bk) => matrix => {
 };
 
 export default memo(() => {
+  const [isFit, setFit] = useIsFit(() => getLocalState("is-fit", true));
   const [width, updateWidth] = useStateWidth(() => getLocalState("width", COLS));
-  const [height, updateHeight] = useStateHeight(() => getLocalState("width", ROWS));
-  const [isFit, setFit] = useState(true);
+  const [height, updateHeight] = useStateHeight(() => getLocalState("height", ROWS));
   const [tileList, setTileList] = useTilesAvailableState(() => getLocalState("tiles", [...availableTiles]));
   const [matrix, setMatrix] = useMatrixState(() => getLocalState("matrix", calcMatrix(width, height)));
-  const [selected, setSelected] = useState({});
+  const [selected, setSelected] = useSelected(() => getLocalState("selected", {}));
+
+  const onReset = useCallback(() => {
+    updateWidth(COLS);
+    updateHeight(ROWS);
+    setFit(true);
+    setTileList([...availableTiles]);
+    setMatrix(calcMatrix(COLS, ROWS));
+    setSelected({});
+  }, [setFit, setMatrix, setSelected, setTileList, updateHeight, updateWidth]);
 
   useEffect(() => {
     setMatrix(() => getLocalState("matrix", calcMatrix(width, height)));
@@ -103,6 +114,7 @@ export default memo(() => {
     <Layout>
       <Panel>
         <h2>Config</h2>
+        <ResetButton onClick={onReset}>reset</ResetButton>
         <h3>Size</h3>
         <Size
           isFit={isFit}

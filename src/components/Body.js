@@ -48,7 +48,7 @@ export default memo(({ width, height, isFit, selected, onSelect, onUnSelect, mat
           const currentTile = matrix[r] && matrix[r][c];
           const onClick = () => {
             if (currentTile) {
-              onUnSelect(currentTile);
+              onUnSelect(currentTile, 1);
             }
 
             if (selected && selected.background !== currentTile) {

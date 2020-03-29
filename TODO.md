@@ -1,7 +1,6 @@
 TODO
 
 - download/upload save
-- reset
 
 extra
 
