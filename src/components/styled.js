@@ -111,3 +111,21 @@ export const Button = styled.button`
   text-align: center;
   background: white;
 `;
+
+export const Input = styled.input`
+  border: 1px solid #ccc;
+  font-size: 120%;
+  padding: 5px;
+  font-weight: bold;
+  width: 35%;
+`;
+
+export const Block = styled.div`
+  padding: 0 1em;
+  display: flex;
+  justify-content: ${p => (p.left ? "flex-start" : p.right ? "flex-end" : "space-between")};
+  align-items: center;
+  line-height: 1;
+  margin-bottom: 20px;
+  ${p => (p.left ? " > *:nth-child(n+2) {margin-left: .5em}" : "")}
+`;

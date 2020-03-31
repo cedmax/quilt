@@ -6,7 +6,7 @@ import Size from "./components/Size";
 import AvailableTiles from "./components/AvailableTiles";
 import Body from "./components/Body";
 import { ROWS, COLS } from "./constants";
-import getTiles from "./tiles";
+import getTiles, { mapper } from "./tiles";
 import getLocalState from "./localstorage";
 
 const useTilesAvailableState = createPersistedState("tiles");
@@ -23,26 +23,26 @@ const calcMatrix = (matrix, width, height) => {
         return matrix[r][c] || "";
       });
     } else {
-      return [...new Array(width)].map(col => "");
+      return [...new Array(width)].map((col) => "");
     }
   });
   return stuff;
 };
 
-const updateMatrix = (r, c, bk) => matrix => {
+const updateMatrix = (r, c, bk) => (matrix) => {
   matrix = [...matrix];
   matrix[r][c] = bk;
   return matrix;
 };
 
-const decrease = item => ({
+const decrease = (item) => ({
   ...item,
-  qty: item.qty - 1
+  qty: item.qty - 1,
 });
 
-const increase = item => ({
+const increase = (item) => ({
   ...item,
-  qty: item.qty + 1
+  qty: item.qty + 1,
 });
 
 export default memo(() => {
@@ -63,7 +63,7 @@ export default memo(() => {
   }, [setFit, setMatrix, setSelected, setTileList, updateHeight, updateWidth]);
 
   const onRestore = useCallback(
-    data => {
+    (data) => {
       updateWidth(data.width);
       updateHeight(data.height);
       setFit(data.isFit);
@@ -74,13 +74,23 @@ export default memo(() => {
     [setFit, setMatrix, setSelected, setTileList, updateHeight, updateWidth]
   );
 
+  const addTile = useCallback(
+    (img, qty, retro) => {
+      setTileList((tileList) => [...tileList, mapper({ img, qty, retro })]);
+      if (retro) {
+        setTileList((tileList) => [...tileList, mapper({ img: retro, qty, retro: img })]);
+      }
+    },
+    [setTileList]
+  );
+
   useEffect(() => {
-    setMatrix(matrix => calcMatrix(matrix, width, height));
+    setMatrix((matrix) => calcMatrix(matrix, width, height));
   }, [width, height, setMatrix]);
 
   const selectTile = useCallback(
-    tile => {
-      const idx = tileList.findIndex(item => item.background === tile.background);
+    (tile) => {
+      const idx = tileList.findIndex((item) => item.background === tile.background);
       setSelected(idx);
     },
     [setSelected, tileList]
@@ -89,8 +99,8 @@ export default memo(() => {
   const handleQty = useCallback(
     (r, c, tile, prevBk) => {
       setMatrix(updateMatrix(r, c, tile.background || ""));
-      setTileList(state =>
-        state.map(item => {
+      setTileList((state) =>
+        state.map((item) => {
           let retItem = item;
           if (prevBk === item.background || prevBk === item.retro) {
             retItem = increase(retItem);
@@ -116,7 +126,7 @@ export default memo(() => {
             height,
             tileList,
             matrix,
-            selected
+            selected,
           }}
           onRestore={onRestore}
           onReset={onReset}
@@ -131,12 +141,12 @@ export default memo(() => {
           updateHeight={updateHeight}
         />
         <h3>Tiles</h3>
-        <AvailableTiles selectTile={selectTile} selected={selected} tiles={tileList} />
+        <AvailableTiles addTile={addTile} selectTile={selectTile} selected={selected} tiles={tileList} />
       </Panel>
       <Body
         matrix={matrix}
         setMatrix={setMatrix}
-        selected={tileList[selected]}
+        selected={tileList[selected] || {}}
         onSelect={handleQty}
         isFit={isFit}
         width={width}

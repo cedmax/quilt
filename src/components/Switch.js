@@ -1,6 +1,5 @@
-import React, { useCallback, memo } from "react";
+import React, { useCallback, memo, useRef } from "react";
 import styled from "styled-components";
-import { TOGGLE_ID } from "../constants";
 
 const size = 19;
 
@@ -11,7 +10,7 @@ const Label = styled.label`
   cursor: pointer;
   width: ${size * 2}px;
   height: ${size}px;
-  background: grey;
+  background: ${p => (p.checked ? "green" : "grey")};
   border-radius: 100px;
   position: relative;
   transition: background-color 0.2s;
@@ -20,7 +19,8 @@ const Label = styled.label`
     content: "";
     position: absolute;
     top: 2px;
-    left: 2px;
+    left: ${p => (p.checked ? `calc(100% - 2px)` : `2px`)};
+    transform: ${p => (p.checked ? "translateX(-100%);" : "none")};
     width: ${size - 5}px;
     height: ${size - 5}px;
     border-radius: ${size - 5}px;
@@ -39,25 +39,16 @@ const Checkbox = styled.input`
   width: 0;
   position: absolute;
   visibility: hidden;
-
-  &:checked + ${Label} {
-    background: green;
-    span {
-      left: calc(100% - 2px);
-      transform: translateX(-100%);
-    }
-  }
 `;
 
 export default memo(({ checked, onChange }) => {
-  const updateField = useCallback(e => onChange(document.getElementById(TOGGLE_ID).checked), [onChange]);
+  const checkboxRef = useRef();
+  const updateField = useCallback(e => onChange(checkboxRef.current.checked), [onChange, checkboxRef]);
 
   return (
-    <div>
-      <Checkbox checked={checked} onChange={updateField} id={TOGGLE_ID} type="checkbox" />
-      <Label htmlFor={TOGGLE_ID}>
-        <span />
-      </Label>
-    </div>
+    <Label checked={checked}>
+      <Checkbox checked={checked} onChange={updateField} ref={checkboxRef} type="checkbox" />
+      <span />
+    </Label>
   );
 });

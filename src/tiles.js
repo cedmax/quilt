@@ -1,42 +1,7 @@
-const original = [
-  { img: "/tiles/00.jpg", qty: 1 },
-  { img: "/tiles/01.jpg", qty: 5 },
-  { img: "/tiles/02.jpg", qty: 2 },
-  { img: "/tiles/03.jpg", qty: 27 },
-  { img: "/tiles/04.jpg", qty: 4 },
-  { img: "/tiles/05.jpg", qty: 22 },
-  { img: "/tiles/06.jpg", qty: 4 },
-  { img: "/tiles/07.jpg", qty: 6 },
-  { img: "/tiles/08.jpg", qty: 4 },
-  { img: "/tiles/09.jpg", qty: 2 },
-  { img: "/tiles/10.jpg", qty: 1 },
-  { img: "/tiles/11.jpg", qty: 4 },
-  { img: "/tiles/12.jpg", qty: 22 },
-  { img: "/tiles/13.jpg", qty: 54, retro: "/tiles/38.jpg" },
-  { img: "/tiles/14.jpg", qty: 20 },
-  { img: "/tiles/15.jpg", qty: 42 },
-  { img: "/tiles/16.jpg", qty: 7 },
-  { img: "/tiles/17.jpg", qty: 6 },
-  { img: "/tiles/18.jpg", qty: 7 },
-  { img: "/tiles/19.jpg", qty: 7 },
-  { img: "/tiles/20.jpg", qty: 15 },
-  { img: "/tiles/21.jpg", qty: 6 },
-  { img: "/tiles/22.jpg", qty: 9 },
-  { img: "/tiles/23.jpg", qty: 8 },
-  { img: "/tiles/24.jpg", qty: 37 },
-  { img: "/tiles/25.jpg", qty: 32 },
-  { img: "/tiles/26.jpg", qty: 2 },
-  { img: "/tiles/27.jpg", qty: 80 },
-  { img: "/tiles/28.jpg", qty: 21 },
-  { img: "/tiles/29.jpg", qty: 2 },
-  { img: "/tiles/30.jpg", qty: 1 },
-  { img: "/tiles/32.jpg", qty: 9, retro: "/tiles/33.jpg" },
-  { img: "/tiles/33.jpg", qty: 9, retro: "/tiles/32.jpg" },
-  { img: "/tiles/34.jpg", qty: 1 },
-  { img: "/tiles/35.jpg", qty: 4 },
-  { img: "/tiles/36.jpg", qty: 2 },
-  { img: "/tiles/37.jpg", qty: 6 },
-  { img: "/tiles/38.jpg", qty: 54, retro: "/tiles/13.jpg" }
-].map(({ img, qty, retro }) => ({ background: `url('${img}')`, qty, retro: retro ? `url('${retro}')` : null }));
+export const mapper = ({ img, qty, retro }) => ({
+  background: `url('${img}')`,
+  qty,
+  retro: retro ? `url('${retro}')` : null,
+});
 
-export default () => [...original];
+export default () => [];

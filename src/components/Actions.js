@@ -1,8 +1,9 @@
 import React, { memo, useCallback } from "react";
 import { ButtonWrapper, Button } from "./styled";
+import transformer from "../backward/compatibility";
 
 export default memo(({ onReset, onRestore, stateToSave }) => {
-  const href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(stateToSave));
+  const href = "data:text/json;charset=utf-8," + encodeURIComponent(transformer(JSON.stringify(stateToSave)));
 
   const onChange = useCallback(
     e => {
@@ -10,7 +11,7 @@ export default memo(({ onReset, onRestore, stateToSave }) => {
       const reader = new FileReader();
 
       reader.onload = event => {
-        const data = JSON.parse(event.target.result);
+        const data = JSON.parse(transformer(event.target.result));
         onRestore(data);
       };
 
