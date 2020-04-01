@@ -1,12 +1,29 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-*, *::before, *::after {
+body.wait::after {
+  content: "wait for it...";
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 200%;
+  color: white;
+  top: 0;
+  left: 0;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }

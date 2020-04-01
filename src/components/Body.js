@@ -12,6 +12,10 @@ const Wrapper = styled.div`
   height: calc(100vh - 60px);
   flex-grow: 1;
   overflow: auto;
+
+  &.free {
+    height: auto;
+  }
 `;
 
 export default memo(({ width, height, isFit, selected, onSelect, matrix }) => {
@@ -37,6 +41,9 @@ export default memo(({ width, height, isFit, selected, onSelect, matrix }) => {
   }, [isFit, width, height]);
 
   const save = useCallback(() => {
+    document.body.classList.add("wait");
+    wrapperRef.current.classList.add("free");
+
     html2canvas(wrapperRef.current).then(canvas => {
       canvas.id = "remove";
       document.body.appendChild(canvas);
@@ -47,6 +54,8 @@ export default memo(({ width, height, isFit, selected, onSelect, matrix }) => {
       link.click();
 
       document.body.removeChild(link);
+      wrapperRef.current.classList.remove("free");
+      document.body.classList.remove("wait");
       document.getElementById("remove").remove();
     });
   }, [wrapperRef]);
